@@ -5,14 +5,14 @@ imap wrapper for me.
 Example to use
 --------------
 
-*create* function helps me::
+*connect* function helps me::
 
     >>> import easyimap
     >>> host = "imap.gmail.com"
     >>> user = "me@example.com"
     >>> password = "hogehogehogehoge"
     >>> mailbox = "secret"
-    >>> mailer = easyimap.create(host, user, password, mailbox)
+    >>> mailer = easyimap.connect(host, user, password, mailbox)
 
 I can list up latest n mail by listup method::
 
