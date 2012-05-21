@@ -1,3 +1,3 @@
-from .easyimap import create
+from .easyimap import connect
 
-__all__ = ['create']
+__all__ = ['connect']
