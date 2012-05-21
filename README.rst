@@ -44,7 +44,7 @@ Finally, quit method helps me::
 
 Basic API
 ---------
-* easyimap.create(host, user, password, mailbox)
+* easyimap.connect(host, user, password, mailbox)
     Create nice object.
 
 MailerFacade

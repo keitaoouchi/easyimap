@@ -106,5 +106,5 @@ class MailerFacade(object):
         """return string of email body"""
         return self._mailgw.get_body(id)
 
-def create(host, user, password, mailbox):
+def connect(host, user, password, mailbox):
     return MailerFacade(host, user, password, mailbox)
