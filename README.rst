@@ -1,22 +1,22 @@
 About this module
 -----------------
-imap wrapper for me.
+Simple imap wrapper.
 
 Example to use
 --------------
 
-*connect* function helps me::
+*connect* function create IMAP$_SSL instance::
 
     >>> import easyimap
     >>> host = "imap.gmail.com"
     >>> user = "me@example.com"
     >>> password = "hogehogehogehoge"
     >>> mailbox = "secret"
-    >>> mailer = easyimap.connect(host, user, password, mailbox)
+    >>> imapper = easyimap.connect(host, user, password, mailbox)
 
-I can list up latest n mail by listup method::
+This imapper can list up latest n mail by *listup* method::
 
-    >>> mailer.listup(2)
+    >>> imapper.listup(2)
     [(80, <easyimap.easyimap.MailObj object at 0x...>), (79, <easyimap.easyimap.MailObj object at 0x...)]
     >>> [(id1, mail1), (id2, mail2)] = mailer.listup(2)
     >>> id1
@@ -32,29 +32,37 @@ I can list up latest n mail by listup method::
     >>> type(mail1.sender)
     <type 'unicode'>
     
-And I can directly grub mail body by index::
+You can check latest unseen mail by *unseen* method::
     
-    >>> body = mailer.body(80)
-    >>> type(body)
-    <type 'unicode'>
+    >>> imapper.unseen(2)
+    [(82, <easyimap.easyimap.MailObj object at 0x...>), (81, <easyimap.easyimap.MailObj object at 0x...)]
+    
+You can directly grub email object with specifiedd id::
+    
+    >>> imapper.mail(80)
+    <easyimap.easyimap.MailObj object at 0x...>
 
-Finally, quit method helps me::
+Finally, call *quit* method::
 
     >>> mailer.quit()
 
 Basic API
 ---------
-* easyimap.connect(host, user, password, mailbox)
-    Create nice object.
+* easyimap.connect(host, user, password, mailbox='INBOX', timeout=15)
+    Create IMAP4_SSL wrapper.
 
-MailerFacade
-^^^^^^^^^^^^
+Imapper
+^^^^^^^
 * listup(limit=10)
     Returns list of tuples(email_id, mail_object).
-* body(id)
+* unseen(limit=10)
+    Returns list of typles(email_id, mail_object).
+* mail(id)
     Returns string of email body.
+* change_mailbox(mailbox)
+    Change mailbox.
 * quit
-    Close and logout.
+    Close and Logout.
 
 MailObject
 ^^^^^^^^^^
