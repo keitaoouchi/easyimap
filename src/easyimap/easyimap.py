@@ -49,7 +49,7 @@ class MailObj(object):
         body = unicode(part.get_payload(), charset) if charset else part.get_payload()
         return body
 
-class MailerObj(object):
+class Imapper(object):
 
     def __init__(self, host, user, password, mailbox, timeout):
         self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
@@ -66,12 +66,6 @@ class MailerObj(object):
                 raise Exception("Timeout.")
         return M
 
-    def change_mailbox(self, mailbox):
-        status, msgs = self._mailer.select(mailbox)
-        if status == 'OK':
-            return True
-        return False
-
     def _parse_email(self, data):
         message = email.message_from_string(data)
         return MailObj(message)
@@ -80,6 +74,12 @@ class MailerObj(object):
         """close and logout"""
         self._mailer.close()
         self._mailer.logout()
+
+    def change_mailbox(self, mailbox):
+        status, msgs = self._mailer.select(mailbox)
+        if status == 'OK':
+            return True
+        return False
 
     def unseen(self, limit=10):
         return self.listup(limit, 'UNSEEN')
@@ -100,14 +100,14 @@ class MailerObj(object):
         else:
             raise Exception("Could not get ALL")
 
-    def body(self, id):
-        """return string of email body"""
+    def mail(self, id):
+        """returns MailObj by specified id"""
         typ, content = self._mailer.fetch(id, '(RFC822)')
         if typ == 'OK':
             mail = self._parse_email(content[0][1])
-            return mail.body
+            return mail
         else:
             raise Exception("Could not get email.")
 
 def connect(host, user, password, mailbox='INBOX', timeout=15):
-    return MailerObj(host, user, password, mailbox, timeout)
+    return Imapper(host, user, password, mailbox, timeout)
