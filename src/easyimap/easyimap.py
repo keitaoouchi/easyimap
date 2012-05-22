@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import imaplib
-import time
 import email
-import cStringIO
 
 class MailObj(object):
 
