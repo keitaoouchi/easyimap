@@ -2,6 +2,7 @@
 
 import imaplib
 import email
+import time
 
 class MailObj(object):
 
@@ -48,61 +49,65 @@ class MailObj(object):
         body = unicode(part.get_payload(), charset) if charset else part.get_payload()
         return body
 
-class MailerGateway(object):
+class MailerObj(object):
 
-    def __init__(self, mailer, *criteria):
-        self._mailer = mailer
-        self._ids = mailer.search(None, criteria)[1][0].split()
+    def __init__(self, host, user, password, mailbox, timeout):
+        self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
 
-    @property
-    def ids(self):
-        return self._ids
+    def _get_mailer(self, host, user, password, mailbox, timeout):
+        timeout = time.time() + timeout
+        M = imaplib.IMAP4_SSL(host=host)
+        M.login(user, password)
+        while True:
+            status, msgs = M.select(mailbox)
+            if status == 'OK':
+                break
+            if time.time() > timeout:
+                raise Exception("Timeout.")
+        return M
+
+    def change_mailbox(self, mailbox):
+        status, msgs = self._mailer.select(mailbox)
+        if status == 'OK':
+            return True
+        return False
 
     def _parse_email(self, data):
         message = email.message_from_string(data)
         return MailObj(message)
 
-    def listup_mails(self, limit=None):
-        emailids = self.ids
-        start = min(len(emailids), limit)
-        result = []
-        for num in emailids[-1:-(start + 1):-1]:
-            typ, content = self._mailer.fetch(num, '(RFC822)')
-            mail = self._parse_email(content[0][1])
-            result.append((int(num), mail))
-        return result
-
-    def get_body(self, id):
-        typ, content = self._mailer.fetch(id, '(RFC822)')
-        mail = self._parse_email(content[0][1])
-        return mail.body
-
     def quit(self):
+        """close and logout"""
         self._mailer.close()
         self._mailer.logout()
 
-class MailerFacade(object):
+    def unseen(self, limit=10):
+        return self.listup(limit, 'UNSEEN')
 
-    def __init__(self, host, user, password, mailbox):
-        self._mailgw = MailerGateway(self._get_mailer(host, user, password, mailbox))
-
-    def _get_mailer(self, host, user, password, mailbox='INBOX'):
-        M = imaplib.IMAP4_SSL(host=host)
-        M.login(user, password)
-        M.select(mailbox)
-        return M
-
-    def quit(self):
-        """close and logout"""
-        self._mailgw.quit()
-
-    def listup(self, limit=10):
-        """return list of tuples(email_id, mail_object)"""
-        return self._mailgw.listup_mails(limit)
+    def listup(self, limit=10, *criterion):
+        criterion = criterion or ['ALL']
+        status, msgs = self._mailer.search(None, *criterion)
+        if status == 'OK':
+            emailids = msgs[0].split()
+            start = min(len(emailids), limit)
+            result = []
+            for num in emailids[-1:-(start + 1):-1]:
+                typ, content = self._mailer.fetch(num, '(RFC822)')
+                if typ == 'OK':
+                    mail = self._parse_email(content[0][1])
+                    result.append((int(num), mail))
+            return result
+        else:
+            raise Exception("Could not get ALL")
 
     def body(self, id):
         """return string of email body"""
-        return self._mailgw.get_body(id)
+        typ, content = self._mailer.fetch(id, '(RFC822)')
+        if typ == 'OK':
+            mail = self._parse_email(content[0][1])
+            return mail.body
+        else:
+            raise Exception("Could not get email.")
 
-def connect(host, user, password, mailbox):
-    return MailerFacade(host, user, password, mailbox)
+def connect(host, user, password, mailbox='INBOX', timeout=15):
+    return MailerObj(host, user, password, mailbox, timeout)
