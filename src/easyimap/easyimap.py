@@ -25,7 +25,7 @@ class MailObj(object):
         for part in self._message.walk():
             if part.get_content_maintype() != 'multipart' and not part.get_filename():
                 return self._decode_body(part)
-        raise Exception("凸[-_-]")
+        raise Exception("orz... something... something happened.")
 
     def __str__(self):
         date_format = ""
