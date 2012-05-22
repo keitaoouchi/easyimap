@@ -5,7 +5,7 @@ Simple imap wrapper.
 Example to use
 --------------
 
-*connect* function create IMAP$_SSL instance::
+*connect* function create IMAP4_SSL instance::
 
     >>> import easyimap
     >>> host = "imap.gmail.com"
@@ -31,14 +31,14 @@ This imapper can list up latest n mail by *listup* method::
     <type 'unicode'>
     >>> type(mail1.sender)
     <type 'unicode'>
-    
+
 You can check latest unseen mail by *unseen* method::
-    
+
     >>> imapper.unseen(2)
     [(82, <easyimap.easyimap.MailObj object at 0x...>), (81, <easyimap.easyimap.MailObj object at 0x...)]
-    
+
 You can directly grub email object with specifiedd id::
-    
+
     >>> imapper.mail(80)
     <easyimap.easyimap.MailObj object at 0x...>
 
@@ -58,7 +58,7 @@ Imapper
 * unseen(limit=10)
     Returns list of typles(email_id, mail_object).
 * mail(id)
-    Returns string of email body.
+    Returns MailObj.
 * change_mailbox(mailbox)
     Change mailbox.
 * quit
