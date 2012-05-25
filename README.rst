@@ -37,7 +37,7 @@ You can check latest unseen mail by *unseen* method::
     >>> imapper.unseen(2)
     [(82, <easyimap.easyimap.MailObj object at 0x...>), (81, <easyimap.easyimap.MailObj object at 0x...)]
 
-You can directly grub email object with specifiedd id::
+You can directly fetch email object with specific id::
 
     >>> imapper.mail(80)
     <easyimap.easyimap.MailObj object at 0x...>
