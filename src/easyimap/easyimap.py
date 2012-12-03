@@ -66,6 +66,10 @@ class MailObj(object):
         for part in self._message.walk():
             if part.get_content_maintype() != 'multipart' and not part.get_filename():
                 return self._decode_body(part)
+            if part.get_content_maintype() == 'multipart':
+                for p in part.get_payload():
+                        if p.get_content_maintype() == 'text':
+                            return self._decode_body(p)
         raise Exception("orz... something... something happened.")
 
     def __str__(self):
