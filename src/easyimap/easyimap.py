@@ -71,7 +71,7 @@ class MailObj(object):
     def __str__(self):
         date_format = ""
         template = "{date}", "{sender}", "{title}"
-        return " || ".join(template).format(date=self.date, sender=self.sender, title=self.title)
+        return " || ".join(template).format(date=self.date, sender=self.sender, title=self.title.encode("utf8"))
 
     def _decode_header(self, data):
         decoded_headers = email.Header.decode_header(data)
