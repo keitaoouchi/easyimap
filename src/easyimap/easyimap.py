@@ -4,6 +4,7 @@ import imaplib
 import email
 import time
 
+
 class MailObj(object):
 
     def __init__(self, message):
@@ -64,7 +65,8 @@ class MailObj(object):
     @property
     def body(self):
         for part in self._message.walk():
-            if part.get_content_maintype() != 'multipart' and not part.get_filename():
+            if part.get_content_maintype() != 'multipart' \
+                and not part.get_filename():
                 return self._decode_body(part)
             if part.get_content_maintype() == 'multipart':
                 for p in part.get_payload():
@@ -92,7 +94,11 @@ class MailObj(object):
     def __str__(self):
         date_format = ""
         template = "{date}", "{sender}", "{title}"
-        return " || ".join(template).format(date=self.date, sender=self.sender, title=self.title.encode("utf8"))
+        return " || ".join(template).format(
+                date=self.date,
+                sender=self.sender,
+                title=self.title.encode("utf8")
+                )
 
     def _decode_header(self, data):
         decoded_headers = email.Header.decode_header(data)
@@ -104,11 +110,12 @@ class MailObj(object):
                 headers.append(unicode(decoded_str))
         return "".join(headers)
 
-
     def _decode_body(self, part):
         charset = str(part.get_content_charset())
-        body = unicode(part.get_payload(), charset) if charset else part.get_payload()
+        body = unicode(part.get_payload(), charset) \
+            if charset else part.get_payload()
         return body
+
 
 class Imapper(object):
 
@@ -169,6 +176,7 @@ class Imapper(object):
             return mail
         else:
             raise Exception("Could not get email.")
+
 
 def connect(host, user, password, mailbox='INBOX', timeout=15):
     return Imapper(host, user, password, mailbox, timeout)
