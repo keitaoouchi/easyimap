@@ -18,6 +18,46 @@ class MailObj(object):
         return self._decode_header(self._message.get('From'))
 
     @property
+    def cc(self):
+        return self._decode_header(self._message.get('CC'))
+
+    @property
+    def deliverdto(self):
+        return self._decode_header(self._message.get('Delivered-To'))
+
+    @property
+    def contenttype(self):
+        return self._decode_header(self._message.get('Content-Type'))
+
+    @property
+    def contenttransferencoding(self):
+        return self._decode_header(self._message.get('Content-Transfer-Encoding'))
+
+    @property
+    def references(self):
+        return self._decode_header(self._message.get('References'))
+
+    @property
+    def inrepplyto(self):
+        return self._decode_header(self._message.get('In-Reply-To'))
+
+    @property
+    def repplyto(self):
+        return self._decode_header(self._message.get('Reply-To'))
+
+    @property
+    def returnpath(self):
+        return self._decode_header(self._message.get('Return-Path'))
+
+    @property
+    def mimeversion(self):
+        return self._decode_header(self._message.get('MIME-Version'))
+
+    @property
+    def messageid(self):
+        return self._decode_header(self._message.get('Message-ID'))
+
+    @property
     def date(self):
         return self._decode_header(self._message.get('Date'))
 
