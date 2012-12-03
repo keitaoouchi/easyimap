@@ -113,7 +113,7 @@ class MailObj(object):
 
     def _decode_body(self, part):
         charset = str(part.get_content_charset())
-        body = unicode(part.get_payload(), charset) \
+        body = unicode(part.get_payload(decode=True), charset) \
             if charset else part.get_payload()
         return body
 
