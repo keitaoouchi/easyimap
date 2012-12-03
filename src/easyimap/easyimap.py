@@ -94,7 +94,6 @@ class MailObj(object):
         raise Exception("orz... something... something happened.")
 
     def __str__(self):
-        date_format = ""
         template = "{date}", "{sender}", "{title}"
         return " || ".join(template).format(
                 date=self.date,
