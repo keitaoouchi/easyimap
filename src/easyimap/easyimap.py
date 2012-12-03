@@ -72,6 +72,23 @@ class MailObj(object):
                             return self._decode_body(p)
         raise Exception("orz... something... something happened.")
 
+    @property
+    def attachments(self):
+        attachments = []
+        for part in self._message.walk():
+            if part.get_content_maintype() == 'multipart':
+                continue
+            if part.get('Content-Disposition') is None:
+                continue
+            if part.get_filename():
+                filename = part.get_filename() or 'none'
+                data = part.get_payload(decode=True)
+                if not data:
+                    continue
+                attachments.append((filename, data))
+        return attachments
+        raise Exception("orz... something... something happened.")
+
     def __str__(self):
         date_format = ""
         template = "{date}", "{sender}", "{title}"

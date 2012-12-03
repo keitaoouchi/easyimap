@@ -42,6 +42,13 @@ You can directly fetch email object with specific id::
     >>> imapper.mail(80)
     <easyimap.easyimap.MailObj object at 0x...>
 
+You can download attachments::
+
+    >>> imapper.mail(80)
+    >>> (id, mail) = imapper.mail(80)
+    >>> for attachment in mail.attachment:
+    >>>     print attachment[0], attachment[1]
+
 Finally, call *quit* method::
 
     >>> imapper.quit()
