@@ -1,3 +1,6 @@
+#This file is part easyimap.
+#The COPYRIGHT file at the top level of this repository contains
+#the full copyright notices and license terms.
 from setuptools import setup
 
 from sys import version
@@ -26,14 +29,14 @@ classifiers = [
 setup(
     author='Keita Oouchi',
     author_email='keita.oouchi@gmail.com',
-    url = 'https://github.com/keitaoouchi/easyimap',
-    name = 'easyimap',
-    version = '0.2.0',
-    package_dir={"":"src"},
-    packages = ['easyimap'],
-    test_suite = "test_seleniumwrapper.suite",
+    url='https://github.com/keitaoouchi/easyimap',
+    name='easyimap',
+    version='0.2.0',
+    package_dir={"": "src"},
+    packages=['easyimap'],
+    test_suite="test_seleniumwrapper.suite",
     license='BSD License',
     classifiers=classifiers,
-    description = 'Simple imap wrapper.',
+    description='Simple imap wrapper.',
     long_description=long_description,
 )
