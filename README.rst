@@ -81,3 +81,21 @@ MailObject
     Returns string of 'Date' header.
 * body
     Returns string of Body.
+* contenttype
+    Returns string of 'Content-Type' header.
+* contenttransferencoding
+    Returns string of 'Content-Transfer-Encoding' header.
+* references
+    Returns string of 'References' header.
+* inrepplyto
+    Returns string of 'In-Reply-To' header.
+* repplyto
+    Returns string of 'Reply-To' header.
+* returnpath
+    Returns string of 'Return-Path' header.
+* mimeversion
+    Returns string of 'MIME-Version' header.
+* messageid
+    Returns string of 'Message-ID' header.
+* attachments
+    Returns list of tuples('attached file name', MailObj).
