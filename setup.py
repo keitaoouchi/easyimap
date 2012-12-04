@@ -31,7 +31,7 @@ setup(
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version='0.2.0',
+    version='0.3.0',
     package_dir={"": "src"},
     packages=['easyimap'],
     test_suite="test_seleniumwrapper.suite",
