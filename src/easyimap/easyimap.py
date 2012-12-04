@@ -1,8 +1,11 @@
+#This file is part easyimap.
+#The COPYRIGHT file at the top level of this repository contains
+#the full copyright notices and license terms.
 # -*- coding: utf-8 -*-
-
 import imaplib
 import email
 import time
+
 
 class MailObj(object):
 
@@ -18,20 +21,85 @@ class MailObj(object):
         return self._decode_header(self._message.get('From'))
 
     @property
+    def cc(self):
+        return self._decode_header(self._message.get('CC'))
+
+    @property
+    def deliverdto(self):
+        return self._decode_header(self._message.get('Delivered-To'))
+
+    @property
+    def contenttype(self):
+        return self._decode_header(self._message.get('Content-Type'))
+
+    @property
+    def contenttransferencoding(self):
+        return self._decode_header(self._message.get('Content-Transfer-Encoding'))
+
+    @property
+    def references(self):
+        return self._decode_header(self._message.get('References'))
+
+    @property
+    def inrepplyto(self):
+        return self._decode_header(self._message.get('In-Reply-To'))
+
+    @property
+    def repplyto(self):
+        return self._decode_header(self._message.get('Reply-To'))
+
+    @property
+    def returnpath(self):
+        return self._decode_header(self._message.get('Return-Path'))
+
+    @property
+    def mimeversion(self):
+        return self._decode_header(self._message.get('MIME-Version'))
+
+    @property
+    def messageid(self):
+        return self._decode_header(self._message.get('Message-ID'))
+
+    @property
     def date(self):
         return self._decode_header(self._message.get('Date'))
 
     @property
     def body(self):
         for part in self._message.walk():
-            if part.get_content_maintype() != 'multipart' and not part.get_filename():
+            if part.get_content_maintype() != 'multipart' \
+                and not part.get_filename():
                 return self._decode_body(part)
+            if part.get_content_maintype() == 'multipart':
+                for p in part.get_payload():
+                        if p.get_content_maintype() == 'text':
+                            return self._decode_body(p)
+        raise Exception("orz... something... something happened.")
+
+    @property
+    def attachments(self):
+        attachments = []
+        for part in self._message.walk():
+            if part.get_content_maintype() == 'multipart':
+                continue
+            if part.get('Content-Disposition') is None:
+                continue
+            if part.get_filename():
+                filename = part.get_filename() or 'none'
+                data = part.get_payload(decode=True)
+                if not data:
+                    continue
+                attachments.append((filename, data))
+        return attachments
         raise Exception("orz... something... something happened.")
 
     def __str__(self):
-        date_format = ""
         template = "{date}", "{sender}", "{title}"
-        return " || ".join(template).format(date=self.date, sender=self.sender, title=self.title)
+        return " || ".join(template).format(
+                date=self.date,
+                sender=self.sender,
+                title=self.title.encode("utf8")
+                )
 
     def _decode_header(self, data):
         decoded_headers = email.Header.decode_header(data)
@@ -43,11 +111,12 @@ class MailObj(object):
                 headers.append(unicode(decoded_str))
         return "".join(headers)
 
-
     def _decode_body(self, part):
         charset = str(part.get_content_charset())
-        body = unicode(part.get_payload(), charset) if charset else part.get_payload()
+        body = unicode(part.get_payload(decode=True), charset) \
+            if charset else part.get_payload()
         return body
+
 
 class Imapper(object):
 
@@ -108,6 +177,7 @@ class Imapper(object):
             return mail
         else:
             raise Exception("Could not get email.")
+
 
 def connect(host, user, password, mailbox='INBOX', timeout=15):
     return Imapper(host, user, password, mailbox, timeout)
