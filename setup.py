@@ -7,9 +7,6 @@ from sys import version
 if version < '2.6.0':
     raise Exception("This module doesn't support any version less than 2.6")
 
-import sys
-sys.path.append("./test")
-
 with open('README.rst', 'r') as f:
     long_description = f.read()
 
@@ -25,18 +22,19 @@ classifiers = [
     'Topic :: Software Development :: Libraries :: Python Modules'
 ]
 
+requires = ['chardet>=2.1.1']
 
 setup(
     author='Keita Oouchi',
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version='0.3.0',
+    version='0.3.1',
     package_dir={"": "src"},
     packages=['easyimap'],
-    test_suite="test_seleniumwrapper.suite",
     license='BSD License',
     classifiers=classifiers,
     description='Simple imap wrapper.',
     long_description=long_description,
+    install_requires=requires,
 )
