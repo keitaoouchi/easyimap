@@ -125,8 +125,9 @@ class MailObj(object):
 
 class Imapper(object):
 
-    def __init__(self, host, user, password, mailbox, timeout):
+    def __init__(self, host, user, password, mailbox, timeout, **kwargs):
         self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
+        self._fetch_message_parts = kwargs.get("fetch_message_parts", "(RFC822)")
 
     def _get_mailer(self, host, user, password, mailbox, timeout):
         timeout = time.time() + timeout
@@ -166,7 +167,7 @@ class Imapper(object):
             start = min(len(emailids), limit)
             result = []
             for num in emailids[-1:-(start + 1):-1]:
-                typ, content = self._mailer.fetch(num, '(RFC822)')
+                typ, content = self._mailer.fetch(num, self._fetch_message_parts)
                 if typ == 'OK':
                     mail = self._parse_email(content[0][1])
                     result.append((int(num), mail))
@@ -176,7 +177,7 @@ class Imapper(object):
 
     def mail(self, id):
         """returns MailObj by specified id"""
-        typ, content = self._mailer.fetch(id, '(RFC822)')
+        typ, content = self._mailer.fetch(id, self._fetch_message_parts)
         if typ == 'OK':
             mail = self._parse_email(content[0][1])
             return mail
@@ -184,5 +185,5 @@ class Imapper(object):
             raise Exception("Could not get email.")
 
 
-def connect(host, user, password, mailbox='INBOX', timeout=15):
-    return Imapper(host, user, password, mailbox, timeout)
+def connect(host, user, password, mailbox='INBOX', timeout=15, **kwargs):
+    return Imapper(host, user, password, mailbox, timeout, **kwargs)
