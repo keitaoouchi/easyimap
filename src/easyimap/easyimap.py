@@ -126,6 +126,7 @@ class MailObj(object):
 class Imapper(object):
 
     def __init__(self, host, user, password, mailbox, timeout, **kwargs):
+        self._read_only = kwargs.get("read_only", False)
         self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
         self._fetch_message_parts = kwargs.get("fetch_message_parts", "(RFC822)")
 
@@ -134,7 +135,7 @@ class Imapper(object):
         M = imaplib.IMAP4_SSL(host=host)
         M.login(user, password)
         while True:
-            status, msgs = M.select(mailbox)
+            status, msgs = M.select(mailbox, self._read_only)
             if status == 'OK':
                 break
             if time.time() > timeout:
@@ -151,7 +152,7 @@ class Imapper(object):
         self._mailer.logout()
 
     def change_mailbox(self, mailbox):
-        status, msgs = self._mailer.select(mailbox)
+        status, msgs = self._mailer.select(mailbox, self._read_only)
         if status == 'OK':
             return True
         return False
