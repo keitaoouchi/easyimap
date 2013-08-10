@@ -57,6 +57,7 @@ Basic API
 ---------
 * easyimap.connect(host, user, password, mailbox='INBOX', timeout=15)
     Create IMAP4_SSL wrapper.
+    If you want to keep read/unread status, Please pass optional `read_only=True` argument.
 
 Imapper
 ^^^^^^^
