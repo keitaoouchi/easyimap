@@ -160,21 +160,25 @@ class Imapper(object):
     def unseen(self, limit=10):
         return self.listup(limit, 'UNSEEN')
 
-    def listup(self, limit=10, *criterion):
+    def listids(self, limit=10, *criterion):
         criterion = criterion or ['ALL']
         status, msgs = self._mailer.search(None, *criterion)
         if status == 'OK':
             emailids = msgs[0].split()
             start = min(len(emailids), limit)
-            result = []
-            for num in emailids[-1:-(start + 1):-1]:
-                typ, content = self._mailer.fetch(num, self._fetch_message_parts)
-                if typ == 'OK':
-                    mail = self._parse_email(content[0][1])
-                    result.append((int(num), mail))
-            return result
+            return emailids[-1:-(start + 1):-1]
         else:
             raise Exception("Could not get ALL")
+
+    def listup(self, limit=10, *criterion):
+        emailids = self.listids(limit, criterion)
+        result = []
+        for num in emailids:
+            typ, content = self._mailer.fetch(num, self._fetch_message_parts)
+            if typ == 'OK':
+                mail = self._parse_email(content[0][1])
+                result.append((int(num), mail))
+        return result
 
     def mail(self, id):
         """returns MailObj by specified id"""
