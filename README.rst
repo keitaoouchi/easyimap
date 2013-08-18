@@ -61,6 +61,8 @@ Basic API
 
 Imapper
 ^^^^^^^
+* listids(limit=10)
+    Returns list of available email ids.
 * listup(limit=10)
     Returns list of tuples(email_id, mail_object).
 * unseen(limit=10)
