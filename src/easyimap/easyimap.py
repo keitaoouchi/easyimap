@@ -10,10 +10,12 @@ import re
 
 class MailObj(object):
 
-    def __init__(self, message, uid=-1):
+    def __init__(self, message, uid=-1, raw=''):
         self._message = message
         if uid > -1:
             self._uid = uid
+        if raw:
+            self._raw = raw
 
     @property
     def uid(self):
@@ -70,6 +72,10 @@ class MailObj(object):
     @property
     def date(self):
         return self._decode_header(self._message.get('Date'))
+
+    @property
+    def raw(self):
+        return self._raw
 
     @property
     def body(self):
@@ -149,13 +155,16 @@ class Imapper(object):
                 raise Exception("Timeout.")
         return M
 
-    def _parse_email(self, data):
+    def _parse_email(self, data, include_raw=False):
         message = email.message_from_string(data[0][1])
         uid = re.findall('[UID ](\d+)', data[0][0])
+        args = {}
         if uid:
-            mailobj = MailObj(message, uid=int(uid[0]))
-        else:
-            mailobj = MailObj(message)
+            args['uid'] = int(uid[0])
+        if include_raw:
+            args['raw'] = data[0][1]
+
+        mailobj = MailObj(message, **args)
         return mailobj
 
     def quit(self):
@@ -188,15 +197,15 @@ class Imapper(object):
         for num in emailids:
             typ, content = self._mailer.fetch(num, self._fetch_message_parts)
             if typ == 'OK':
-                mail = self._parse_email(content)
+                mail = self._parse_email(content, include_raw=include_raw)
                 result.append((int(num), mail))
         return result
 
-    def mail(self, id):
+    def mail(self, id, include_raw=False):
         """returns MailObj by specified id"""
         typ, content = self._mailer.fetch(id, self._fetch_message_parts)
         if typ == 'OK':
-            mail = self._parse_email(content)
+            mail = self._parse_email(content, include_raw=include_raw)
             return mail
         else:
             raise Exception("Could not get email.")
