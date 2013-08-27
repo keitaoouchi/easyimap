@@ -129,13 +129,12 @@ class MailObj(object):
 
     def _decode_body(self, part):
         charset = str(part.get_content_charset())
+        payload = part.get_payload(decode=True)
         try:
-            body = unicode(part.get_payload(decode=True), charset) \
-                if charset else part.get_payload()
+            body = unicode(payload, charset) if charset else part.get_payload()
         except:
-            encoding = chardet.detect(part.get_payload(decode=True))
-            body = unicode(part.get_payload(decode=True), \
-                           encoding.get('encoding'))
+            encoding = chardet.detect(payload)
+            body = unicode(payload, encoding.get('encoding'))
         return body
 
 
