@@ -9,11 +9,12 @@ the full copyright notices and license terms.
 import imaplib
 import email
 import time
-import chardet
 import re
 
-class MailObj(object):
+import chardet
 
+
+class MailObj(object):
     def __init__(self, message, uid=-1, raw=''):
         self._message = message
         self._uid = uid if uid > -1 else None
@@ -82,13 +83,13 @@ class MailObj(object):
     @property
     def body(self):
         for part in self._message.walk():
-            if part.get_content_maintype() != 'multipart' \
-                and not part.get_filename():
+            maintype = part.get_content_maintype()
+            if maintype != 'multipart' and not part.get_filename():
                 return self._decode_body(part)
-            if part.get_content_maintype() == 'multipart':
+            if maintype == 'multipart':
                 for p in part.get_payload():
-                        if p.get_content_maintype() == 'text':
-                            return self._decode_body(p)
+                    if p.get_content_maintype() == 'text':
+                        return self._decode_body(p)
         raise Exception("orz... something... something happened.")
 
     @property
@@ -110,11 +111,12 @@ class MailObj(object):
 
     def __str__(self):
         template = "{date}", "{sender}", "{title}"
-        return " || ".join(template).format(
-                date=self.date,
-                sender=self.sender,
-                title=self.title.encode("utf8")
-                )
+        represent = " || ".join(template).format(
+            date=self.date,
+            sender=self.sender,
+            title=self.title.encode("utf8")
+        )
+        return represent
 
     def _decode_header(self, data):
         decoded_headers = email.Header.decode_header(data)
@@ -134,16 +136,15 @@ class MailObj(object):
         except:
             encoding = chardet.detect(part.get_payload(decode=True))
             body = unicode(part.get_payload(decode=True), \
-                encoding.get('encoding'))
+                           encoding.get('encoding'))
         return body
 
 
 class Imapper(object):
-
     def __init__(self, host, user, password, mailbox, timeout, **kwargs):
-        self._read_only = kwargs.get("read_only", False)
         self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
         self._fetch_message_parts = kwargs.get("fetch_message_parts", "(UID RFC822)")
+        self._read_only = kwargs.get("read_only", False)
 
     def _get_mailer(self, host, user, password, mailbox, timeout):
         timeout = time.time() + timeout
