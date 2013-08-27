@@ -6,11 +6,18 @@ import imaplib
 import email
 import time
 import chardet
+import re
 
 class MailObj(object):
 
-    def __init__(self, message):
+    def __init__(self, message, uid=-1):
         self._message = message
+        if uid > -1:
+            self._uid = uid
+
+    @property
+    def uid(self):
+        return self._uid
 
     @property
     def title(self):
@@ -128,7 +135,7 @@ class Imapper(object):
     def __init__(self, host, user, password, mailbox, timeout, **kwargs):
         self._read_only = kwargs.get("read_only", False)
         self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
-        self._fetch_message_parts = kwargs.get("fetch_message_parts", "(RFC822)")
+        self._fetch_message_parts = kwargs.get("fetch_message_parts", "(UID RFC822)")
 
     def _get_mailer(self, host, user, password, mailbox, timeout):
         timeout = time.time() + timeout
@@ -143,8 +150,13 @@ class Imapper(object):
         return M
 
     def _parse_email(self, data):
-        message = email.message_from_string(data)
-        return MailObj(message)
+        message = email.message_from_string(data[0][1])
+        uid = re.findall('[UID ](\d+)', data[0][0])
+        if uid:
+            mailobj = MailObj(message, uid=int(uid[0]))
+        else:
+            mailobj = MailObj(message)
+        return mailobj
 
     def quit(self):
         """close and logout"""
@@ -176,7 +188,7 @@ class Imapper(object):
         for num in emailids:
             typ, content = self._mailer.fetch(num, self._fetch_message_parts)
             if typ == 'OK':
-                mail = self._parse_email(content[0][1])
+                mail = self._parse_email(content)
                 result.append((int(num), mail))
         return result
 
@@ -184,7 +196,7 @@ class Imapper(object):
         """returns MailObj by specified id"""
         typ, content = self._mailer.fetch(id, self._fetch_message_parts)
         if typ == 'OK':
-            mail = self._parse_email(content[0][1])
+            mail = self._parse_email(content)
             return mail
         else:
             raise Exception("Could not get email.")
