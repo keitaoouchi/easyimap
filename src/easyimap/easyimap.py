@@ -107,7 +107,6 @@ class MailObj(object):
                     continue
                 attachments.append((filename, data))
         return attachments
-        raise Exception("orz... something... something happened.")
 
     def __str__(self):
         template = "{date}", "{sender}", "{title}"
