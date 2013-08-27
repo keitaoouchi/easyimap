@@ -12,10 +12,8 @@ class MailObj(object):
 
     def __init__(self, message, uid=-1, raw=''):
         self._message = message
-        if uid > -1:
-            self._uid = uid
-        if raw:
-            self._raw = raw
+        self._uid = uid if uid > -1 else None
+        self._raw = raw if raw else None
 
     @property
     def uid(self):
