@@ -191,7 +191,7 @@ class Imapper(object):
         else:
             raise Exception("Could not get ALL")
 
-    def listup(self, limit=10, *criterion):
+    def listup(self, limit=10, include_raw=False, *criterion):
         emailids = self.listids(limit, criterion)
         result = []
         for num in emailids:
