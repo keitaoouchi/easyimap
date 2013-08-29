@@ -14,7 +14,8 @@ Example to use
     >>> mailbox = "secret"
     >>> imapper = easyimap.connect(host, user, password, mailbox)
 
-This imapper can list up latest n mail by *listup* method::
+This imapper can list up latest n mail by *listup* method.
+By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
 
     >>> imapper.listup(2)
     [(80, <easyimap.easyimap.MailObj object at 0x...>), (79, <easyimap.easyimap.MailObj object at 0x...)]
@@ -76,6 +77,14 @@ Imapper
 
 MailObject
 ^^^^^^^^^^
+* uid
+    Returns UID(type: int).
+* raw
+    if you fetched email with include_raw option, this returns raw Data::
+
+        >>> [(id1, mail1), (id2, mail2)] = imapper.listup(2, include_raw)
+        >>> data = mail1.raw
+
 * title
     Returns string of 'Subject' header.
 * sender
