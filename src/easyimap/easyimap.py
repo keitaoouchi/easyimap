@@ -140,9 +140,9 @@ class MailObj(object):
 
 class Imapper(object):
     def __init__(self, host, user, password, mailbox, timeout, **kwargs):
-        self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
         self._fetch_message_parts = kwargs.get("fetch_message_parts", "(UID RFC822)")
         self._read_only = kwargs.get("read_only", False)
+        self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
 
     def _get_mailer(self, host, user, password, mailbox, timeout):
         timeout = time.time() + timeout
