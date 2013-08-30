@@ -97,9 +97,10 @@ class MailObj(object):
             if part.get_filename():
                 filename = part.get_filename() or 'none'
                 data = part.get_payload(decode=True)
+                content_type = part.get_content_type()
                 if not data:
                     continue
-                attachments.append((filename, data))
+                attachments.append((filename, data, content_type))
         return attachments
 
     def __str__(self):
