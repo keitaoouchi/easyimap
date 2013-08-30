@@ -4,6 +4,7 @@ import imaplib
 import email
 import time
 import re
+import mimetypes
 
 import chardet
 
@@ -88,6 +89,7 @@ class MailObj(object):
 
     @property
     def attachments(self):
+        counter = 1
         attachments = []
         for part in self._message.walk():
             if part.get_content_maintype() == 'multipart':
@@ -95,7 +97,15 @@ class MailObj(object):
             if part.get('Content-Disposition') is None:
                 continue
             if part.get_filename():
-                filename = part.get_filename() or 'none'
+                filename = part.get_filename()
+                if not filename:
+                    ext = mimetypes.guess_extension(part.get_content_type())
+                    if not ext:
+                        # Use a generic bag-of-bits extension
+                        ext = '.bin'
+                    filename = 'part-%03d%s' % (counter, ext)
+                counter += 1
+
                 data = part.get_payload(decode=True)
                 content_type = part.get_content_type()
                 if not data:
