@@ -37,7 +37,7 @@ class MailObj(object):
         return self._decode_header(self._message.get('CC'))
 
     @property
-    def deliverdto(self):
+    def deliveredto(self):
         return self._decode_header(self._message.get('Delivered-To'))
 
     @property
@@ -53,11 +53,11 @@ class MailObj(object):
         return self._decode_header(self._message.get('References'))
 
     @property
-    def inrepplyto(self):
+    def inreplyto(self):
         return self._decode_header(self._message.get('In-Reply-To'))
 
     @property
-    def repplyto(self):
+    def replyto(self):
         return self._decode_header(self._message.get('Reply-To'))
 
     @property
