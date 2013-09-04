@@ -99,9 +99,9 @@ MailObject
     Returns string of 'Content-Transfer-Encoding' header.
 * references
     Returns string of 'References' header.
-* inrepplyto
+* inreplyto
     Returns string of 'In-Reply-To' header.
-* repplyto
+* replyto
     Returns string of 'Reply-To' header.
 * returnpath
     Returns string of 'Return-Path' header.
