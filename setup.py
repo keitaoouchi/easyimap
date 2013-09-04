@@ -1,9 +1,7 @@
-#This file is part easyimap.
-#The COPYRIGHT file at the top level of this repository contains
-#the full copyright notices and license terms.
 from setuptools import setup
 
 from sys import version
+import easyimap
 if version < '2.6.0':
     raise Exception("This module doesn't support any version less than 2.6")
 
@@ -29,8 +27,8 @@ setup(
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version='0.3.6',
-    package_dir={"": "src"},
+    version=easyimap.__version__,
+    package_dir={"easyimap": "easyimap"},
     packages=['easyimap'],
     license='BSD License',
     classifiers=classifiers,
