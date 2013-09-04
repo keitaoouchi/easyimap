@@ -118,6 +118,8 @@ class MailObj(object):
         return represent
 
     def _decode_header(self, data):
+        if data is None:
+            return
         decoded_headers = email.Header.decode_header(data)
         headers = []
         for decoded_str, charset in decoded_headers:
