@@ -201,7 +201,7 @@ class Imapper(object):
 
     def listids(self, limit=10, *criterion):
         criterion = criterion or ['ALL']
-        status, msgs = self._mailer.search(None, *criterion)
+        status, msgs = self._mailer.uid('search', None, *criterion)
         if status == 'OK':
             emailids = msgs[0].split()
             start = min(len(emailids), limit)
