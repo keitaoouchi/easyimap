@@ -24,8 +24,18 @@ class MailObj(object):
         return self._decode_header(self._message.get('Subject'))
 
     @property
-    def sender(self):
+    def to(self):
+        return self._decode_header(self._message.get('To'))
+
+    @property
+    def from_addr(self):
+        """Method name includes _addr so it does not conflict with the `from`
+        keyword in Python."""
         return self._decode_header(self._message.get('From'))
+
+    @property
+    def sender(self):
+        return self._decode_header(self._message.get('Sender'))
 
     @property
     def cc(self):
@@ -191,7 +201,7 @@ class Imapper(object):
 
     def listids(self, limit=10, *criterion):
         criterion = criterion or ['ALL']
-        status, msgs = self._mailer.search(None, *criterion)
+        status, msgs = self._mailer.uid('search', None, *criterion)
         if status == 'OK':
             emailids = msgs[0].split()
             start = min(len(emailids), limit)
