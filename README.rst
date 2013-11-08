@@ -88,7 +88,11 @@ MailObject
 * title
     Returns string of 'Subject' header.
 * sender
+    Returns string of 'Sender' header.
+* from_addr
     Returns string of 'From' header.
+* to
+    Returns string of 'To' header.
 * date
     Returns string of 'Date' header.
 * body
