@@ -1,7 +1,6 @@
 from setuptools import setup
 
 from sys import version
-import easyimap
 if version < '2.6.0':
     raise Exception("This module doesn't support any version less than 2.6")
 
@@ -20,14 +19,14 @@ classifiers = [
     'Topic :: Software Development :: Libraries :: Python Modules'
 ]
 
-requires = ['chardet>=2.1.1']
+requires = ['chardet']
 
 setup(
     author='Keita Oouchi',
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version=easyimap.__version__,
+    version='0.3.9',
     package_dir={"easyimap": "easyimap"},
     packages=['easyimap'],
     license='BSD License',
