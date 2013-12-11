@@ -202,9 +202,9 @@ class Imapper(object):
     def unseen(self, limit=10):
         return self.listup(limit, 'UNSEEN')
 
-    def listids(self, limit=10, *criterion):
-        criterion = criterion or ['ALL']
-        status, msgs = self._mailer.uid('search', None, *criterion)
+    def listids(self, limit, criterion):
+        criterion = criterion or 'ALL'
+        status, msgs = self._mailer.uid('search', None, criterion)
         if status == 'OK':
             emailids = msgs[0].split()
             start = min(len(emailids), limit)
@@ -212,7 +212,7 @@ class Imapper(object):
         else:
             raise Exception("Could not get ALL")
 
-    def listup(self, limit=10, include_raw=False, *criterion):
+    def listup(self, limit=10, criterion=None, include_raw=False):
         emailids = self.listids(limit, criterion)
         result = []
         for num in emailids:
