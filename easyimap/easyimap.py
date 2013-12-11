@@ -216,7 +216,7 @@ class Imapper(object):
         emailids = self.listids(limit, criterion)
         result = []
         for num in emailids:
-            typ, content = self._mailer.fetch(num, self._fetch_message_parts)
+            typ, content = self._mailer.uid('fetch', num, self._fetch_message_parts)
             if typ == 'OK':
                 mail = self._parse_email(content, include_raw=include_raw)
                 result.append((int(num), mail))
@@ -224,7 +224,7 @@ class Imapper(object):
 
     def mail(self, id, include_raw=False):
         """returns MailObj by specified id"""
-        typ, content = self._mailer.fetch(id, self._fetch_message_parts)
+        typ, content = self._mailer.uid('fetch', id, self._fetch_message_parts)
         if typ == 'OK':
             mail = self._parse_email(content, include_raw=include_raw)
             return mail
