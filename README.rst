@@ -14,6 +14,15 @@ Example to use
     >>> mailbox = "secret"
     >>> imapper = easyimap.connect(host, user, password, mailbox)
 
+*connect* function create IMAP4 instance::
+
+    >>> import easyimap
+    >>> host = "imap.gmail.com"
+    >>> user = "me@example.com"
+    >>> password = "hogehogehogehoge"
+    >>> mailbox = "secret"
+    >>> imapper = easyimap.connect(host, user, password, mailbox, ssl=False, port=143)
+
 This imapper can list up latest n mail by *listup* method.
 By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
 

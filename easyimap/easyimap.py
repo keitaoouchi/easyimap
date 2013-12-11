@@ -156,14 +156,17 @@ class MailObj(object):
 
 
 class Imapper(object):
-    def __init__(self, host, user, password, mailbox, timeout, **kwargs):
+    def __init__(self, host, user, password, mailbox, timeout, ssl, port, **kwargs):
         self._fetch_message_parts = kwargs.get("fetch_message_parts", "(UID RFC822)")
         self._read_only = kwargs.get("read_only", False)
-        self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
+        self._mailer = self._get_mailer(host, user, password, mailbox, timeout, ssl, port)
 
-    def _get_mailer(self, host, user, password, mailbox, timeout):
+    def _get_mailer(self, host, user, password, mailbox, timeout, ssl, port):
         timeout = time.time() + timeout
-        M = imaplib.IMAP4_SSL(host=host)
+        if ssl:
+            M = imaplib.IMAP4_SSL(host=host, port=port)
+        else:
+            M = imaplib.IMAP4(host=host, port=port)
         M.login(user, password)
         while True:
             status, msgs = M.select(mailbox, self._read_only)
@@ -229,5 +232,5 @@ class Imapper(object):
             raise Exception("Could not get email.")
 
 
-def connect(host, user, password, mailbox='INBOX', timeout=15, **kwargs):
-    return Imapper(host, user, password, mailbox, timeout, **kwargs)
+def connect(host, user, password, mailbox='INBOX', timeout=15, ssl=True, port=993, **kwargs):
+    return Imapper(host, user, password, mailbox, timeout, ssl, port, **kwargs)
