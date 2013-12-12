@@ -5,7 +5,7 @@ Simple imap wrapper.
 Example to use
 --------------
 
-*connect* function create IMAP4_SSL instance::
+*connect* function create IMAP4_SSL instance by default::
 
     >>> import easyimap
     >>> host = "imap.gmail.com"
@@ -14,7 +14,7 @@ Example to use
     >>> mailbox = "secret"
     >>> imapper = easyimap.connect(host, user, password, mailbox)
 
-*connect* function create IMAP4 instance::
+*connect* function also create IMAP4 instance by passing *ssl* argument::
 
     >>> import easyimap
     >>> host = "imap.gmail.com"
@@ -23,8 +23,8 @@ Example to use
     >>> mailbox = "secret"
     >>> imapper = easyimap.connect(host, user, password, mailbox, ssl=False, port=143)
 
-This imapper can list up latest n mail by *listup* method.
-By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
+| This imapper can list up latest n mail by *listup* method.
+| By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
 
     >>> imapper.listup(2)
     [(80, <easyimap.easyimap.MailObj object at 0x...>), (79, <easyimap.easyimap.MailObj object at 0x...)]
@@ -65,23 +65,24 @@ Finally, call *quit* method::
 
 Basic API
 ---------
-* easyimap.connect(host, user, password, mailbox='INBOX', timeout=15)
-    Create IMAP4_SSL wrapper.
-    If you want to keep read/unread status, Please pass optional `read_only=True` argument.
+* easyimap.connect(host, user, password, mailbox='INBOX', timeout=15, ssl=True, port=993, \*\*kwargs)
+    | Create IMAP4(_SSL) wrapper.
+    | If you want to keep read/unread status, Please pass optional `read_only=True` argument.
+    | kwargs are read from Imapper's constructor. Plz read source code.
 
 Imapper
 ^^^^^^^
-* listids(limit=10)
+* listids(limit, criterion)
     Returns list of available email ids.
-* listup(limit=10)
+* listup(limit=10, criterion=None, include_raw=False)
     Returns list of tuples(email_id, mail_object).
 * unseen(limit=10)
     Returns list of typles(email_id, mail_object).
-* mail(id)
+* mail(id, include_raw=False)
     Returns MailObj.
 * change_mailbox(mailbox)
     Change mailbox.
-* quit
+* quit()
     Close and Logout.
 
 MailObject
