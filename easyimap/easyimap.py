@@ -202,7 +202,7 @@ class Imapper(object):
     def unseen(self, limit=10):
         return self.listup(limit, 'UNSEEN')
 
-    def listids(self, limit, criterion):
+    def listids(self, limit=10, criterion=None):
         criterion = criterion or 'ALL'
         status, msgs = self._mailer.uid('search', None, criterion)
         if status == 'OK':
