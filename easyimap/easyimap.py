@@ -156,14 +156,17 @@ class MailObj(object):
 
 
 class Imapper(object):
-    def __init__(self, host, user, password, mailbox, timeout, **kwargs):
+    def __init__(self, host, user, password, mailbox, timeout, ssl, port, **kwargs):
         self._fetch_message_parts = kwargs.get("fetch_message_parts", "(UID RFC822)")
         self._read_only = kwargs.get("read_only", False)
-        self._mailer = self._get_mailer(host, user, password, mailbox, timeout)
+        self._mailer = self._get_mailer(host, user, password, mailbox, timeout, ssl, port)
 
-    def _get_mailer(self, host, user, password, mailbox, timeout):
+    def _get_mailer(self, host, user, password, mailbox, timeout, ssl, port):
         timeout = time.time() + timeout
-        M = imaplib.IMAP4_SSL(host=host)
+        if ssl:
+            M = imaplib.IMAP4_SSL(host=host, port=port)
+        else:
+            M = imaplib.IMAP4(host=host, port=port)
         M.login(user, password)
         while True:
             status, msgs = M.select(mailbox, self._read_only)
@@ -199,9 +202,9 @@ class Imapper(object):
     def unseen(self, limit=10):
         return self.listup(limit, 'UNSEEN')
 
-    def listids(self, limit=10, *criterion):
-        criterion = criterion or ['ALL']
-        status, msgs = self._mailer.uid('search', None, *criterion)
+    def listids(self, limit, criterion):
+        criterion = criterion or 'ALL'
+        status, msgs = self._mailer.uid('search', None, criterion)
         if status == 'OK':
             emailids = msgs[0].split()
             start = min(len(emailids), limit)
@@ -209,11 +212,11 @@ class Imapper(object):
         else:
             raise Exception("Could not get ALL")
 
-    def listup(self, limit=10, include_raw=False, *criterion):
+    def listup(self, limit=10, criterion=None, include_raw=False):
         emailids = self.listids(limit, criterion)
         result = []
         for num in emailids:
-            typ, content = self._mailer.fetch(num, self._fetch_message_parts)
+            typ, content = self._mailer.uid('fetch', num, self._fetch_message_parts)
             if typ == 'OK':
                 mail = self._parse_email(content, include_raw=include_raw)
                 result.append((int(num), mail))
@@ -221,7 +224,7 @@ class Imapper(object):
 
     def mail(self, id, include_raw=False):
         """returns MailObj by specified id"""
-        typ, content = self._mailer.fetch(id, self._fetch_message_parts)
+        typ, content = self._mailer.uid('fetch', id, self._fetch_message_parts)
         if typ == 'OK':
             mail = self._parse_email(content, include_raw=include_raw)
             return mail
@@ -229,5 +232,5 @@ class Imapper(object):
             raise Exception("Could not get email.")
 
 
-def connect(host, user, password, mailbox='INBOX', timeout=15, **kwargs):
-    return Imapper(host, user, password, mailbox, timeout, **kwargs)
+def connect(host, user, password, mailbox='INBOX', timeout=15, ssl=True, port=993, **kwargs):
+    return Imapper(host, user, password, mailbox, timeout, ssl, port, **kwargs)
