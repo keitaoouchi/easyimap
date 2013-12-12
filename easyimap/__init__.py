@@ -10,7 +10,6 @@ Easy Imap wrapper.
 """
 
 __title__ = 'easyimap'
-__version__ = '0.3.8'
 
 from .easyimap import connect
 
