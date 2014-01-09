@@ -8,6 +8,11 @@ import mimetypes
 
 import chardet
 
+try:
+    unicode('')
+except NameError:
+    # for python3 compatibility.
+    unicode = str
 
 class MailObj(object):
     def __init__(self, message, uid=-1, raw=''):
@@ -177,8 +182,16 @@ class Imapper(object):
         return M
 
     def _parse_email(self, data, include_raw=False):
-        message = email.message_from_string(data[0][1])
-        uid = re.findall('[UID ](\d+)', data[0][0])
+        string_or_bytes_message = data[0][1]
+        string_or_bytes_uid = data[0][0]
+        if not isinstance(string_or_bytes_message, str):
+            encoding = chardet.detect(string_or_bytes_message)
+            string_or_bytes_message = string_or_bytes_message.decode(encoding.get('encoding'))
+        if not isinstance(string_or_bytes_uid, str):
+            encoding = chardet.detect(string_or_bytes_uid)
+            string_or_bytes_uid = string_or_bytes_uid.decode(encoding.get('encoding'))
+        message = email.message_from_string(string_or_bytes_message)
+        uid = re.findall('[UID ](\d+)', string_or_bytes_uid)
         args = {}
         if uid:
             args['uid'] = int(uid[0])

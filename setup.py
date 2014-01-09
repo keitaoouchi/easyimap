@@ -16,17 +16,19 @@ classifiers = [
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.3',
     'Topic :: Software Development :: Libraries :: Python Modules'
 ]
 
-requires = ['chardet']
+requires = ['chardet>=2.2.1']
 
 setup(
     author='Keita Oouchi',
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version='0.4.1',
+    version='0.5.0',
     package_dir={"easyimap": "easyimap"},
     packages=['easyimap'],
     license='BSD License',
