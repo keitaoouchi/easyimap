@@ -1,13 +1,13 @@
 language: python
 python:
-- '2.6'
-- '2.7'
-- '3.3'
-- '3.4'
+  - '2.6'
+  - '2.7'
+  - '3.3'
+  - '3.4'
 install:
-- pip install -e . --use-mirrors
+  - pip install -e . --use-mirrors
 script:
-- python setup.py test
+  - python setup.py test
 deploy:
   provider: pypi
   user: Keita
@@ -17,8 +17,10 @@ deploy:
     repo: keitaoouchi/easyimap
     branch: release/pypi
     distributions: sdist --formats=gztar,zip
+    python: 3.4
+  allow_failure: false
 notifications:
   slack:
     secure: mRFzPF4qQzRfHCS9rYEKpUI9w5wvyv4AO8AVuzvwU1rExKokdl6jcxsMEYlOvozqztfjY7YSN3hm/KV60UiPBtbuox54GrvkCu/qqfx6tFRc1aS+5JclGvOGrrRyzodCIDJEuayiZIrzUSMwcwRInd+N1atpJUKoa9AgyVn+e0o=
-    on_success: never
-    on_failure: always
+    on_success: change
+    on_failure: change
