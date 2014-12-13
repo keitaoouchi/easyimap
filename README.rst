@@ -2,6 +2,19 @@ About this module
 -----------------
 Simple imap wrapper.
 
+.. image:: https://pypip.in/download/easyimap/badge.svg?period=month
+    :target: https://pypi.python.org/pypi//easyimap/
+    :alt: Downloads
+.. image:: https://pypip.in/version/easyimap/badge.svg?text=version
+    :target: https://pypi.python.org/pypi/easyimap/
+    :alt: Latest Version
+.. image:: https://pypip.in/py_versions/easyimap/badge.svg
+    :target: https://pypi.python.org/pypi/easyimap/
+    :alt: Supported Python versions
+.. image:: https://pypip.in/status/easyimap/badge.svg
+    :target: https://pypi.python.org/pypi/easyimap/
+    :alt: Development Status
+
 Example to use
 --------------
 
