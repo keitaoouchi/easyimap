@@ -2,6 +2,7 @@
 
 import imaplib
 import email
+from email.header import decode_header
 import time
 import re
 import mimetypes
@@ -13,6 +14,7 @@ try:
 except NameError:
     # for python3 compatibility.
     unicode = str
+
 
 class MailObj(object):
     def __init__(self, message, uid=-1, raw=''):
@@ -26,65 +28,65 @@ class MailObj(object):
 
     @property
     def title(self):
-        return self._decode_header(self._message.get('Subject'))
+        return _decode_header(self._message.get('Subject'))
 
     @property
     def to(self):
-        return self._decode_header(self._message.get('To'))
+        return _decode_header(self._message.get('To'))
 
     @property
     def from_addr(self):
         """Method name includes _addr so it does not conflict with the `from`
         keyword in Python."""
-        return self._decode_header(self._message.get('From'))
+        return _decode_header(self._message.get('From'))
 
     @property
     def sender(self):
-        return self._decode_header(self._message.get('Sender'))
+        return _decode_header(self._message.get('Sender'))
 
     @property
     def cc(self):
-        return self._decode_header(self._message.get('CC'))
+        return _decode_header(self._message.get('CC'))
 
     @property
     def deliveredto(self):
-        return self._decode_header(self._message.get('Delivered-To'))
+        return _decode_header(self._message.get('Delivered-To'))
 
     @property
     def contenttype(self):
-        return self._decode_header(self._message.get('Content-Type'))
+        return _decode_header(self._message.get('Content-Type'))
 
     @property
     def contenttransferencoding(self):
-        return self._decode_header(self._message.get('Content-Transfer-Encoding'))
+        return _decode_header(self._message.get('Content-Transfer-Encoding'))
 
     @property
     def references(self):
-        return self._decode_header(self._message.get('References'))
+        return _decode_header(self._message.get('References'))
 
     @property
     def inreplyto(self):
-        return self._decode_header(self._message.get('In-Reply-To'))
+        return _decode_header(self._message.get('In-Reply-To'))
 
     @property
     def replyto(self):
-        return self._decode_header(self._message.get('Reply-To'))
+        return _decode_header(self._message.get('Reply-To'))
 
     @property
     def returnpath(self):
-        return self._decode_header(self._message.get('Return-Path'))
+        return _decode_header(self._message.get('Return-Path'))
 
     @property
     def mimeversion(self):
-        return self._decode_header(self._message.get('MIME-Version'))
+        return _decode_header(self._message.get('MIME-Version'))
 
     @property
     def messageid(self):
-        return self._decode_header(self._message.get('Message-ID'))
+        return _decode_header(self._message.get('Message-ID'))
 
     @property
     def date(self):
-        return self._decode_header(self._message.get('Date'))
+        return _decode_header(self._message.get('Date'))
 
     @property
     def raw(self):
@@ -95,11 +97,11 @@ class MailObj(object):
         for part in self._message.walk():
             maintype = part.get_content_maintype()
             if maintype != 'multipart' and not part.get_filename():
-                return self._decode_body(part)
+                return _decode_body(part)
             if maintype == 'multipart':
                 for p in part.get_payload():
                     if p.get_content_maintype() == 'text':
-                        return self._decode_body(p)
+                        return _decode_body(p)
         raise Exception("orz... something... something happened.")
 
     @property
@@ -137,28 +139,6 @@ class MailObj(object):
         )
         return represent
 
-    def _decode_header(self, data):
-        if data is None:
-            return
-        decoded_headers = email.Header.decode_header(data)
-        headers = []
-        for decoded_str, charset in decoded_headers:
-            if charset:
-                headers.append(unicode(decoded_str, charset))
-            else:
-                headers.append(unicode(decoded_str))
-        return "".join(headers)
-
-    def _decode_body(self, part):
-        charset = str(part.get_content_charset())
-        payload = part.get_payload(decode=True)
-        try:
-            body = unicode(payload, charset) if charset else part.get_payload()
-        except:
-            encoding = chardet.detect(payload)
-            body = unicode(payload, encoding.get('encoding'))
-        return body
-
 
 class Imapper(object):
     def __init__(self, host, user, password, mailbox, timeout, ssl, port, **kwargs):
@@ -180,26 +160,6 @@ class Imapper(object):
             if time.time() > timeout:
                 raise Exception("Timeout.")
         return M
-
-    def _parse_email(self, data, include_raw=False):
-        string_or_bytes_message = data[0][1]
-        string_or_bytes_uid = data[0][0]
-        if not isinstance(string_or_bytes_message, str):
-            encoding = chardet.detect(string_or_bytes_message)
-            string_or_bytes_message = string_or_bytes_message.decode(encoding.get('encoding'))
-        if not isinstance(string_or_bytes_uid, str):
-            encoding = chardet.detect(string_or_bytes_uid)
-            string_or_bytes_uid = string_or_bytes_uid.decode(encoding.get('encoding'))
-        message = email.message_from_string(string_or_bytes_message)
-        uid = re.findall('[UID ](\d+)', string_or_bytes_uid)
-        args = {}
-        if uid:
-            args['uid'] = int(uid[0])
-        if include_raw:
-            args['raw'] = data[0][1]
-
-        mailobj = MailObj(message, **args)
-        return mailobj
 
     def quit(self):
         """close and logout"""
@@ -231,7 +191,7 @@ class Imapper(object):
         for num in emailids:
             typ, content = self._mailer.uid('fetch', num, self._fetch_message_parts)
             if typ == 'OK':
-                mail = self._parse_email(content, include_raw=include_raw)
+                mail = _parse_email(content, include_raw=include_raw)
                 result.append((int(num), mail))
         return result
 
@@ -239,7 +199,7 @@ class Imapper(object):
         """returns MailObj by specified id"""
         typ, content = self._mailer.uid('fetch', id, self._fetch_message_parts)
         if typ == 'OK':
-            mail = self._parse_email(content, include_raw=include_raw)
+            mail = _parse_email(content, include_raw=include_raw)
             return mail
         else:
             raise Exception("Could not get email.")
@@ -247,3 +207,47 @@ class Imapper(object):
 
 def connect(host, user, password, mailbox='INBOX', timeout=15, ssl=True, port=993, **kwargs):
     return Imapper(host, user, password, mailbox, timeout, ssl, port, **kwargs)
+
+
+def _decode_header(data):
+    if data is None:
+        return
+    decoded_headers = decode_header(data)
+    headers = []
+    for decoded_str, charset in decoded_headers:
+        if charset:
+            headers.append(unicode(decoded_str, charset))
+        else:
+            headers.append(unicode(decoded_str))
+    return "".join(headers)
+
+
+def _decode_body(part):
+    charset = str(part.get_content_charset())
+    payload = part.get_payload(decode=True)
+    try:
+        body = unicode(payload, charset) if charset else part.get_payload()
+    except:
+        encoding = chardet.detect(payload)
+        body = unicode(payload, encoding.get('encoding'))
+    return body
+
+
+def _parse_email(data, include_raw=False):
+    string_or_bytes_message = data[0][1]
+    string_or_bytes_uid = data[0][0]
+    if not isinstance(string_or_bytes_message, str):
+        encoding = chardet.detect(string_or_bytes_message)
+        string_or_bytes_message = string_or_bytes_message.decode(encoding.get('encoding'))
+    if not isinstance(string_or_bytes_uid, str):
+        encoding = chardet.detect(string_or_bytes_uid)
+        string_or_bytes_uid = string_or_bytes_uid.decode(encoding.get('encoding'))
+    message = email.message_from_string(string_or_bytes_message)
+    uid = re.findall('[UID ](\d+)', string_or_bytes_uid)
+    args = {}
+    if uid:
+        args['uid'] = int(uid[0])
+    if include_raw:
+        args['raw'] = data[0][1]
+
+    return MailObj(message, **args)
