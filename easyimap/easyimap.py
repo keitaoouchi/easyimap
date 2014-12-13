@@ -49,15 +49,15 @@ class MailObj(object):
         return _decode_header(self._message.get('CC'))
 
     @property
-    def deliveredto(self):
+    def delivered_to(self):
         return _decode_header(self._message.get('Delivered-To'))
 
     @property
-    def contenttype(self):
+    def content_type(self):
         return _decode_header(self._message.get('Content-Type'))
 
     @property
-    def contenttransferencoding(self):
+    def content_transfer_encoding(self):
         return _decode_header(self._message.get('Content-Transfer-Encoding'))
 
     @property
@@ -65,23 +65,23 @@ class MailObj(object):
         return _decode_header(self._message.get('References'))
 
     @property
-    def inreplyto(self):
+    def in_reply_to(self):
         return _decode_header(self._message.get('In-Reply-To'))
 
     @property
-    def replyto(self):
+    def reply_to(self):
         return _decode_header(self._message.get('Reply-To'))
 
     @property
-    def returnpath(self):
+    def return_path(self):
         return _decode_header(self._message.get('Return-Path'))
 
     @property
-    def mimeversion(self):
+    def mime_version(self):
         return _decode_header(self._message.get('MIME-Version'))
 
     @property
-    def messageid(self):
+    def message_id(self):
         return _decode_header(self._message.get('Message-ID'))
 
     @property
@@ -149,17 +149,17 @@ class Imapper(object):
     def _get_mailer(self, host, user, password, mailbox, timeout, ssl, port):
         timeout = time.time() + timeout
         if ssl:
-            M = imaplib.IMAP4_SSL(host=host, port=port)
+            mailer = imaplib.IMAP4_SSL(host=host, port=port)
         else:
-            M = imaplib.IMAP4(host=host, port=port)
-        M.login(user, password)
+            mailer = imaplib.IMAP4(host=host, port=port)
+        mailer.login(user, password)
         while True:
-            status, msgs = M.select(mailbox, self._read_only)
+            status, msgs = mailer.select(mailbox, self._read_only)
             if status == 'OK':
                 break
             if time.time() > timeout:
                 raise Exception("Timeout.")
-        return M
+        return mailer
 
     def quit(self):
         """close and logout"""
@@ -179,25 +179,25 @@ class Imapper(object):
         criterion = criterion or 'ALL'
         status, msgs = self._mailer.uid('search', None, criterion)
         if status == 'OK':
-            emailids = msgs[0].split()
-            start = min(len(emailids), limit)
-            return emailids[-1:-(start + 1):-1]
+            email_ids = msgs[0].split()
+            start = min(len(email_ids), limit)
+            return email_ids[-1:-(start + 1):-1]
         else:
             raise Exception("Could not get ALL")
 
     def listup(self, limit=10, criterion=None, include_raw=False):
-        emailids = self.listids(limit, criterion)
+        email_ids = self.listids(limit, criterion)
         result = []
-        for num in emailids:
-            typ, content = self._mailer.uid('fetch', num, self._fetch_message_parts)
+        for i in email_ids:
+            typ, content = self._mailer.uid('fetch', i, self._fetch_message_parts)
             if typ == 'OK':
                 mail = _parse_email(content, include_raw=include_raw)
-                result.append((int(num), mail))
+                result.append(mail)
         return result
 
-    def mail(self, id, include_raw=False):
+    def mail(self, uid, include_raw=False):
         """returns MailObj by specified id"""
-        typ, content = self._mailer.uid('fetch', id, self._fetch_message_parts)
+        typ, content = self._mailer.uid('fetch', uid, self._fetch_message_parts)
         if typ == 'OK':
             mail = _parse_email(content, include_raw=include_raw)
             return mail
