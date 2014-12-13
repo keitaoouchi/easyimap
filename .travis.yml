@@ -5,14 +5,14 @@ python:
 - '3.3'
 - '3.4'
 install:
-  - pip install -e . --use-mirrors
+- pip install -e . --use-mirrors
 script:
-  - python setup.py test
+- python setup.py test
 deploy:
   provider: pypi
   user: Keita
   password:
-    secure: ZsBQBcoveyMfMBOj6yGPNfvRJ+ou7hYecMZJw2J7OPR8nyQwjTwVD3dhyUTdSWYWr9yZeW+PYvvyvuSJzUUgzohWc8yJUM5VwaPdydsniyOiZaIk8eVjZV7ZepAGnUJhLwRodDPcYmLOUoneh9synOKwrtEWH7NTnSM8XYIqlcA=
+    secure: hiKhwSky/Vj0P3d9PZZLY4zvCdpWhNOogyNhvktY11cPTtBP1mPitMr9MMeyDzhqjc1NzetQqseOvISak9yTTQ6UVL3E7si6n2gXro3NdLlE+8LlNDzV/kAsgmAj3vhzmr1YYf6bATwtxzIDkVcTVgb5WjYqRKxKADILPbY9OKk=
   on:
     repo: keitaoouchi/easyimap
     branch: release/pypi
