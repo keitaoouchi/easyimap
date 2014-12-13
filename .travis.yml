@@ -5,7 +5,9 @@ python:
 - '3.3'
 - '3.4'
 install:
-- pip install -e . --use-mirrors
+  - pip install -e . --use-mirrors
+script:
+  - python setup.py test
 deploy:
   provider: pypi
   user: Keita
