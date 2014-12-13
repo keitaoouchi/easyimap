@@ -39,10 +39,8 @@ Example to use
 | This imapper can list up latest n mail by *listup* method.
 | By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
 
-    >>> imapper.listup(2)
-    [(80, <easyimap.easyimap.MailObj object at 0x...>), (79, <easyimap.easyimap.MailObj object at 0x...)]
-    >>> [(id1, mail1), (id2, mail2)] = imapper.listup(2)
-    >>> id1
+    >>> mail1, mail2 = imapper.listup(2)
+    >>> mail1.uid
     80
     >>> mail1
     <easyimap.easyimap.MailObj object at 0x...>
@@ -88,10 +86,10 @@ Imapper
 * listids(limit=10, criterion=None)
     Returns list of available email ids.
 * listup(limit=10, criterion=None, include_raw=False)
-    Returns list of tuples(email_id, mail_object).
+    Returns list of mail_object.
 * unseen(limit=10)
-    Returns list of typles(email_id, mail_object).
-* mail(id, include_raw=False)
+    Returns list of mail_object.
+* mail(uid, include_raw=False)
     Returns MailObj.
 * change_mailbox(mailbox)
     Change mailbox.
@@ -120,21 +118,30 @@ MailObject
     Returns string of 'Date' header.
 * body
     Returns string of Body.
-* contenttype
+* content_type
     Returns string of 'Content-Type' header.
-* contenttransferencoding
+* content_transfer_encoding
     Returns string of 'Content-Transfer-Encoding' header.
 * references
     Returns string of 'References' header.
-* inreplyto
+* in_reply_to
     Returns string of 'In-Reply-To' header.
-* replyto
+* reply_to
     Returns string of 'Reply-To' header.
-* returnpath
+* return_path
     Returns string of 'Return-Path' header.
-* mimeversion
+* mime_version
     Returns string of 'MIME-Version' header.
-* messageid
+* message_id
     Returns string of 'Message-ID' header.
 * attachments
     Returns list of tuples('attached file name', MailObj).
+
+Recent Change
+~~~~~~~~~~~~~
+
+- 0.6.0
+    + Add support for Python-3.4.
+    + **Backward incompatible changes**
+        * Modify `listup` to return list of mailobj.
+        * Rename many properties to underbar separated format.
