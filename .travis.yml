@@ -1,0 +1,22 @@
+language: python
+python:
+- '2.6'
+- '2.7'
+- '3.3'
+- '3.4'
+install:
+- pip install -e . --use-mirrors
+deploy:
+  provider: pypi
+  user: Keita
+  password:
+    secure: ZsBQBcoveyMfMBOj6yGPNfvRJ+ou7hYecMZJw2J7OPR8nyQwjTwVD3dhyUTdSWYWr9yZeW+PYvvyvuSJzUUgzohWc8yJUM5VwaPdydsniyOiZaIk8eVjZV7ZepAGnUJhLwRodDPcYmLOUoneh9synOKwrtEWH7NTnSM8XYIqlcA=
+  on:
+    repo: keitaoouchi/easyimap
+    branch: release/pypi
+    distributions: sdist --formats=gztar,zip
+notifications:
+  slack:
+    secure: mRFzPF4qQzRfHCS9rYEKpUI9w5wvyv4AO8AVuzvwU1rExKokdl6jcxsMEYlOvozqztfjY7YSN3hm/KV60UiPBtbuox54GrvkCu/qqfx6tFRc1aS+5JclGvOGrrRyzodCIDJEuayiZIrzUSMwcwRInd+N1atpJUKoa9AgyVn+e0o=
+    on_success: never
+    on_failure: always
