@@ -218,7 +218,8 @@ def _decode_header(data):
         if charset:
             headers.append(unicode(decoded_str, charset))
         else:
-            headers.append(unicode(decoded_str))
+            encoding = chardet.detect(decoded_str)
+            headers.append(unicode(decoded_str, encoding['encoding']))
     return "".join(headers)
 
 
