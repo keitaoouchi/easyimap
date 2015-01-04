@@ -140,6 +140,9 @@ MailObject
 Recent Change
 ~~~~~~~~~~~~~
 
+- 0.6.1
+    + Fixed a bug in _decode_header function
+
 - 0.6.0
     + Add support for Python-3.4.
     + **Backward incompatible changes**
