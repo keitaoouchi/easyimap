@@ -219,7 +219,10 @@ def _decode_header(data):
             headers.append(unicode(decoded_str, charset))
         else:
             encoding = chardet.detect(decoded_str)
-            headers.append(unicode(decoded_str, encoding['encoding']))
+            if encoding.get('encoding'):
+                headers.append(unicode(decoded_str, encoding['encoding']))
+            else:
+                headers.append(decoded_str)
     return "".join(headers)
 
 
@@ -230,7 +233,10 @@ def _decode_body(part):
         body = unicode(payload, charset) if charset else part.get_payload()
     except:
         encoding = chardet.detect(payload)
-        body = unicode(payload, encoding.get('encoding'))
+        if encoding.get('encoding'):
+            body = unicode(payload, encoding['encoding'])
+        else:
+            body = payload
     return body
 
 

@@ -29,7 +29,7 @@ setup(
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version='0.6.1',
+    version='0.6.2',
     package_dir={"easyimap": "easyimap"},
     packages=['easyimap'],
     license='BSD License',
