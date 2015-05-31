@@ -139,6 +139,8 @@ MailObject
 
 Recent Change
 ~~~~~~~~~~~~~
+- 0.6.2
+    + Fixed a bug in header/body encoding
 
 - 0.6.1
     + Fixed a bug in _decode_header function
