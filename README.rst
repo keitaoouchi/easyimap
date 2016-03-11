@@ -139,6 +139,8 @@ MailObject
 
 Recent Change
 ~~~~~~~~~~~~~
+- 0.6.3
+    + Add support for python-3.5.
 - 0.6.2
     + Fixed a bug in header/body encoding
 

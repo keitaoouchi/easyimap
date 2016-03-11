@@ -19,6 +19,7 @@ classifiers = [
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
     'Topic :: Software Development :: Libraries :: Python Modules'
 ]
 
@@ -29,7 +30,7 @@ setup(
     author_email='keita.oouchi@gmail.com',
     url='https://github.com/keitaoouchi/easyimap',
     name='easyimap',
-    version='0.6.2',
+    version='0.6.3',
     package_dir={"easyimap": "easyimap"},
     packages=['easyimap'],
     license='BSD License',
