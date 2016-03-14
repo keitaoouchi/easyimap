@@ -111,8 +111,6 @@ class MailObj(object):
         for part in self._message.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
-            if part.get('Content-Disposition') is None:
-                continue
             if part.get_filename():
                 filename = part.get_filename()
                 if not filename:
@@ -215,7 +213,9 @@ def _decode_header(data):
     decoded_headers = decode_header(data)
     headers = []
     for decoded_str, charset in decoded_headers:
-        if charset:
+        if isinstance(decoded_str, unicode):
+            headers.append(decoded_str)
+        elif charset:
             headers.append(unicode(decoded_str, charset))
         else:
             encoding = chardet.detect(decoded_str)
