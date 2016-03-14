@@ -2,18 +2,18 @@ About this module
 -----------------
 Simple imap wrapper.
 
-.. image:: https://pypip.in/download/easyimap/badge.svg?period=month
+.. image:: https://img.shields.io/pypi/dm/easyimap.svg
     :target: https://pypi.python.org/pypi//easyimap/
     :alt: Downloads
-.. image:: https://pypip.in/version/easyimap/badge.svg?text=version
+.. image:: https://img.shields.io/pypi/v/easyimap.svg
     :target: https://pypi.python.org/pypi/easyimap/
     :alt: Latest Version
-.. image:: https://pypip.in/py_versions/easyimap/badge.svg
+.. image:: https://img.shields.io/pypi/pyversions/easyimap.svg
     :target: https://pypi.python.org/pypi/easyimap/
     :alt: Supported Python versions
-.. image:: https://pypip.in/status/easyimap/badge.svg
+.. image:: https://img.shields.io/pypi/l/easyimap.svg
     :target: https://pypi.python.org/pypi/easyimap/
-    :alt: Development Status
+    :alt: License
 
 Example to use
 --------------
@@ -139,6 +139,9 @@ MailObject
 
 Recent Change
 ~~~~~~~~~~~~~
+- 0.6.3
+    + Add support for python-3.5.
+    + Fixed a bug in decoding an attached plain text.
 - 0.6.2
     + Fixed a bug in header/body encoding
 
