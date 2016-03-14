@@ -215,7 +215,9 @@ def _decode_header(data):
     decoded_headers = decode_header(data)
     headers = []
     for decoded_str, charset in decoded_headers:
-        if charset:
+        if isinstance(decoded_str, unicode):
+            headers.append(decoded_str)
+        elif charset:
             headers.append(unicode(decoded_str, charset))
         else:
             encoding = chardet.detect(decoded_str)
