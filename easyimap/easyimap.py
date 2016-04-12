@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import imaplib
 import email
 from email.header import decode_header
@@ -127,6 +128,29 @@ class MailObj(object):
                     continue
                 attachments.append((filename, data, content_type))
         return attachments
+
+    def save_attachments(self, target_folder="/tmp"):
+        """
+        Download the email attachments and save to given
+        target folder
+        """
+
+        att_path = "No attachment found."
+
+        for part in self._message.walk():
+            if part.get_content_maintype() == 'multipart':
+                continue
+            if part.get('Content-Disposition') is None:
+                continue
+
+            filename = part.get_filename()
+            att_path = os.path.join(target_folder, filename)
+
+            if not os.path.isfile(att_path):
+                fp = open(att_path, 'wb')
+                fp.write(part.get_payload(decode=True))
+                fp.close()
+        return att_path
 
     def __str__(self):
         template = "{date}", "{sender}", "{title}"
