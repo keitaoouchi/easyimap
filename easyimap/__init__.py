@@ -11,6 +11,6 @@ Easy Imap wrapper.
 
 __title__ = 'easyimap'
 
-from .easyimap import connect
+from .easyimap import connect,FALLBACK_ENCODING
 
-__all__ = ['connect']
+__all__ = ['connect','FALLBACK_ENCODING']
