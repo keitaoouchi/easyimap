@@ -9,12 +9,14 @@ import mimetypes
 
 import chardet
 
+
 try:
     unicode('')
 except NameError:
     # for python3 compatibility.
     unicode = str
 
+PARAMS = {'FALLBACK_ENCODING':None}
 
 class MailObj(object):
     def __init__(self, message, uid=-1, raw=''):
@@ -245,9 +247,13 @@ def _parse_email(data, include_raw=False):
     string_or_bytes_uid = data[0][0]
     if not isinstance(string_or_bytes_message, str):
         encoding = chardet.detect(string_or_bytes_message)
+        if encoding.get('confidence') < 0.95 and PARAMS["FALLBACK_ENCODING"] is not None:
+            encoding['encoding'] = PARAMS["FALLBACK_ENCODING"]
         string_or_bytes_message = string_or_bytes_message.decode(encoding.get('encoding'))
     if not isinstance(string_or_bytes_uid, str):
         encoding = chardet.detect(string_or_bytes_uid)
+        if encoding.get('confidence') < 0.95 and PARAMS["FALLBACK_ENCODING"] is not None:
+            encoding['encoding'] = PARAMS["FALLBACK_ENCODING"]
         string_or_bytes_uid = string_or_bytes_uid.decode(encoding.get('encoding'))
     message = email.message_from_string(string_or_bytes_message)
     uid = re.findall('[UID ](\d+)', string_or_bytes_uid)
