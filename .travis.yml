@@ -4,8 +4,10 @@ python:
   - '2.7'
   - '3.3'
   - '3.4'
+  - '3.5'
+  - '3.6'
 install:
-  - pip install -e . --use-mirrors
+  - pip install -e .
 script:
   - python setup.py test
 deploy:
@@ -17,7 +19,7 @@ deploy:
     repo: keitaoouchi/easyimap
     branch: release/pypi
     distributions: sdist --formats=gztar,zip
-    python: 3.4
+    python: 3.6
   allow_failure: false
 notifications:
   slack:
