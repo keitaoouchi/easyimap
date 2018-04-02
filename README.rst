@@ -2,9 +2,6 @@ About this module
 -----------------
 Simple imap wrapper.
 
-.. image:: https://img.shields.io/pypi/dm/easyimap.svg
-    :target: https://pypi.python.org/pypi//easyimap/
-    :alt: Downloads
 .. image:: https://img.shields.io/pypi/v/easyimap.svg
     :target: https://pypi.python.org/pypi/easyimap/
     :alt: Latest Version
@@ -36,8 +33,8 @@ Example to use
     >>> mailbox = "secret"
     >>> imapper = easyimap.connect(host, user, password, mailbox, ssl=False, port=143)
 
-| This imapper can list up latest n mail by *listup* method.
-| By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
+This imapper can list up latest n mail by *listup* method.
+By default, This invoke `fetch` from IMAP4_SSL instance with '(UID RFC822)'.::
 
     >>> mail1, mail2 = imapper.listup(2)
     >>> mail1.uid
