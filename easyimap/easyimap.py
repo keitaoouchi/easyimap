@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import imaplib
 import email
@@ -17,14 +16,19 @@ except NameError:
 
 
 class MailObj(object):
-    def __init__(self, message, uid=-1, raw=''):
+    def __init__(self, message, uid=-1, raw='', bid=-1):
         self._message = message
         self._uid = uid if uid > -1 else None
+        self._bid = bid
         self._raw = raw if raw else None
 
     @property
     def uid(self):
         return self._uid
+
+    @property
+    def bid(self):
+        return self._bid
 
     @property
     def title(self):
@@ -185,6 +189,7 @@ class Imapper(object):
 
     def listup(self, limit=10, criterion=None, include_raw=False):
         email_ids = self.listids(limit, criterion)
+        print(email_ids[0])
         result = []
         for i in email_ids:
             typ, content = self._mailer.uid('fetch', i, self._fetch_message_parts)
@@ -201,6 +206,15 @@ class Imapper(object):
             return mail
         else:
             raise Exception("Could not get email.")
+
+    def copy(self, bid, to):
+        typ, content = self._mailer.uid('COPY', bid, to)
+
+        if typ == 'OK':
+            print("Mail copied!")
+            return
+        else:
+            raise Exception("Could not copy email.")
 
 
 def connect(host, user, password, mailbox='INBOX', timeout=15, ssl=True, port=993, **kwargs):
@@ -254,6 +268,7 @@ def _parse_email(data, include_raw=False):
     args = {}
     if uid:
         args['uid'] = int(uid[0])
+        args['bid'] = bytes(uid[0], 'utf8')
     if include_raw:
         args['raw'] = data[0][1]
 
