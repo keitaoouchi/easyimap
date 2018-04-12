@@ -2,16 +2,6 @@ About this module
 -----------------
 Simple imap wrapper.
 
-.. image:: https://img.shields.io/pypi/v/easyimap.svg
-    :target: https://pypi.python.org/pypi/easyimap/
-    :alt: Latest Version
-.. image:: https://img.shields.io/pypi/pyversions/easyimap.svg
-    :target: https://pypi.python.org/pypi/easyimap/
-    :alt: Supported Python versions
-.. image:: https://img.shields.io/pypi/l/easyimap.svg
-    :target: https://pypi.python.org/pypi/easyimap/
-    :alt: License
-
 Example to use
 --------------
 
@@ -80,6 +70,10 @@ Basic API
 
 Imapper
 ^^^^^^^
+* copy(bid=binary id, to="AnotherMailBox")
+    Copies a mail to another mailbox
+    Bytes id = email.bid (Bytes)
+    To = To which mailbox (String)
 * listids(limit=10, criterion=None)
     Returns list of available email ids.
 * listup(limit=10, criterion=None, include_raw=False)
@@ -97,6 +91,8 @@ MailObject
 ^^^^^^^^^^
 * uid
     Returns UID(type: int).
+* bid
+    Returns bytes UID(type: bytes)
 * raw
     if you fetched email with include_raw option, this returns raw Data::
 
@@ -136,6 +132,8 @@ MailObject
 
 Recent Change
 ~~~~~~~~~~~~~
+- 0.6.4
+    + Added new feature to copy mails to another mailbox
 - 0.6.3
     + Add support for python-3.5.
     + Fixed a bug in decoding an attached plain text.
