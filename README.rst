@@ -3,14 +3,17 @@ About this module
 Simple imap wrapper.
 
 .. image:: https://img.shields.io/pypi/v/easyimap-python.svg
-    :target: https://pypi.python.org/pypi/easyimap-python/
+    :target: https://pypi.org/pypi/easyimap-python/
     :alt: Latest Version
 .. image:: https://img.shields.io/pypi/pyversions/easyimap-python.svg
-    :target: https://pypi.python.org/pypi/easyimap-python/
+    :target: https://pypi.org/pypi/easyimap-python/
     :alt: Supported Python versions
 .. image:: https://img.shields.io/pypi/l/easyimap-python.svg
-    :target: https://pypi.python.org/pypi/easyimap-python/
+    :target: https://pypi.org/pypi/easyimap-python/
     :alt: License
+.. image:: https://img.shields.io/pypi/status/easyimap-python.svg
+    :target: https://pypi.org/pypi/easyimap-python/
+    :alt: Status
 
 Example to use
 --------------
