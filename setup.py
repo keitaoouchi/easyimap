@@ -27,13 +27,13 @@ classifiers = [
 requires = ['chardet>=2.3.0']
 
 setup(
-    author='Keita Oouchi',
-    author_email='keita.oouchi@gmail.com',
-    url='https://github.com/keitaoouchi/easyimap',
-    name='easyimap',
-    version='0.6.3',
-    package_dir={"easyimap": "easyimap"},
-    packages=['easyimap'],
+    author='Menno van Hout',
+    author_email='menno.vanhout@universal-games.nl',
+    url='https://github.com/UGxMvH/easyimap',
+    name='easyimap-python',
+    version='0.6.4',
+    package_dir={"easyimap-python": "easyimap-python"},
+    packages=['easyimap-python'],
     license='BSD License',
     classifiers=classifiers,
     description='Simple imap wrapper.',
