@@ -83,9 +83,9 @@ Basic API
 
 Imapper
 ^^^^^^^
-* copy(bid=binary id, to="AnotherMailBox")
+* copy(uid=id, to="AnotherMailBox")
     Copies a mail to another mailbox
-    Bytes id = email.bid (Bytes)
+    uid = MailObject.uid
     To = To which mailbox (String)
 * listids(limit=10, criterion=None)
     Returns list of available email ids.
@@ -104,8 +104,6 @@ MailObject
 ^^^^^^^^^^
 * uid
     Returns UID(type: int).
-* bid
-    Returns bytes UID(type: bytes)
 * raw
     if you fetched email with include_raw option, this returns raw Data::
 
@@ -145,7 +143,9 @@ MailObject
 
 Recent Change
 ~~~~~~~~~~~~~
-- 0.6.4
+- 0.7.1
+    + Hotfix changed copy mail function
+- 0.7.0
     + Added new feature to copy mails to another mailbox
 - 0.6.3
     + Add support for python-3.5.

@@ -31,7 +31,7 @@ setup(
     author_email='menno.vanhout@universal-games.nl',
     url='https://github.com/UGxMvH/easyimap',
     name='easyimap-python',
-    version='0.6.4',
+    version='0.7.1',
     package_dir={"easyimap-python": "easyimap-python"},
     packages=['easyimap-python'],
     license='BSD License',
