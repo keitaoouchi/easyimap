@@ -169,8 +169,8 @@ class Imapper(object):
             return True
         return False
 
-    def unseen(self, limit=10):
-        return self.listup(limit, 'UNSEEN')
+    def unseen(self, limit=10, include_raw=False):
+        return self.listup(limit, 'UNSEEN', include_raw)
 
     def listids(self, limit=10, criterion=None):
         criterion = criterion or 'ALL'
